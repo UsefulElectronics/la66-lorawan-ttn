@@ -16,8 +16,8 @@
 /* PRIVATE STRUCTRES ---------------------------------------------------------*/
 
 /* VARIABLES -----------------------------------------------------------------*/
-static QueueHandle_t uartRx_queue;
-static QueueHandle_t uartTx_queue;
+QueueHandle_t uartRx_queue;
+QueueHandle_t uartTx_queue;
 SemaphoreHandle_t UART_RXsem 	  		= NULL;
 /* DEFINITIONS ---------------------------------------------------------------*/
 
@@ -117,13 +117,17 @@ void uart_event_task(void *pvParameters)
             switch(event.type)
             {
                 //Event of UART receving data
-
+            case UART_DATA:
 //                	ESP_LOGI(UART_DEBUG, "%d", event.size);
 
                     xSemaphoreGive(UART_RXsem);
                     hUart.uart_rxPacketSize = event.size;
                     memcpy(hUart.uart_rxBuffer, dtmp, event.size);
                     hUart.uart_status.flags.rxPacket = 1;
+
+                    xQueueSendToBack(uartRx_queue, &hUart, portMAX_DELAY);
+
+                    memset(&hUart, 0, sizeof(uartHandler_t));
                     break;
                 //Event of HW FIFO overflow detected
                 case UART_FIFO_OVF:
