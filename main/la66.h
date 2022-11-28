@@ -22,6 +22,7 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
+#include "stdbool.h"
 /* MACROS --------------------------------------------------------------------*/
 #define AT_NETWORK_JOINED			"JOINED"
 #define AT_MODULE_RESET 			"ATZ"
@@ -35,12 +36,17 @@
 /* ENUMORATIONS --------------------------------------------------------------*/
 
 /* STRUCTURES & TYPEDEFS -----------------------------------------------------*/
+typedef struct
+{
+	bool joinStatus;
 
+}la66_handler_t;
 /* VARIABLES -----------------------------------------------------------------*/
 
 /* FUNCTIONS DECLARATION -----------------------------------------------------*/
-
-
+bool la66_packetJoinStatus		(void);
+void la66_config				(void);
+void la66_packetParser			(char* packet, uint16_t packetSize);
 
 #endif /* MAIN_LA66_H_ */
 

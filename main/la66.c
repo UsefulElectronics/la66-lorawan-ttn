@@ -17,7 +17,9 @@
 /* PRIVATE STRUCTRES ---------------------------------------------------------*/
 
 /* VARIABLES -----------------------------------------------------------------*/
+la66_handler_t hLa66;
 
+static char *TAG = "LA66";
 /* DEFINITIONS ---------------------------------------------------------------*/
 
 /* MACROS --------------------------------------------------------------------*/
@@ -26,5 +28,43 @@
 
 /* FUNCTION PROTOTYPES -------------------------------------------------------*/
 
+
+/**
+ * @brief
+ *
+ */
+void la66_config(void)
+{
+	memset(&hLa66, 0, sizeof(la66_handler_t));
+}
+
+/**
+ * @brief
+ *
+ * @param packet
+ */
+void la66_packetParser(char* packet, uint16_t packetSize)
+{
+	if(false == hLa66.joinStatus)
+	{
+		uint8_t offset = packetSize - ( 2 + strlen(AT_NETWORK_JOINED));
+
+		ESP_LOGI(TAG, "%s", packet);
+		if(00 == memcmp(&packet[offset], AT_NETWORK_JOINED, strlen(AT_NETWORK_JOINED)))
+		{
+			hLa66.joinStatus = true;
+			ESP_LOGI(TAG, "LoRaWAN network has been joined.");
+		}
+	}
+}
+/**
+ * @brief
+ *
+ * @return
+ */
+bool la66_packetJoinStatus(void)
+{
+	return hLa66.joinStatus;
+}
 
 /**************************  Useful Electronics  ****************END OF FILE***/

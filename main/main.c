@@ -16,7 +16,7 @@
 #include "temp_config.h"
 
 #include "main.h"
-
+#include "la66.h"
 #include "uart_config.h"
 
 /* PRIVATE STRUCTRES ---------------------------------------------------------*/
@@ -29,17 +29,31 @@ hMain_t hMain;
 
 /* PRIVATE FUNCTIONS DECLARATION ---------------------------------------------*/
 
-
+static void peripheral_handler_task				(void *param);
 static void main_creatSysteTasks				(void);
 
 const char *TAG = "Main";
 /* FUNCTION PROTOTYPES -------------------------------------------------------*/
 
+static void peripheral_handler_task(void *param)
+{
+	while(1)
+	{
+		if(xSemaphoreTake(UART_RXsem, portMAX_DELAY) == pdTRUE)
+		{
+			la66_packetParser((char*)hUart.uart_rxBuffer, hUart.uart_rxPacketSize);
+		}
+	}
+}
+
 
 static void main_creatSysteTasks(void)
 {
 	xTaskCreatePinnedToCore(uart_event_task, "uart event", 10000, NULL, 4, NULL, 1);
+
+	xTaskCreatePinnedToCore(peripheral_handler_task, "peripheral handler", 10000, NULL, 4, NULL, 1);
 }
+
 
 
 

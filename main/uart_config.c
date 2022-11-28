@@ -119,14 +119,13 @@ void uart_event_task(void *pvParameters)
                 //Event of UART receving data
             case UART_DATA:
 //                	ESP_LOGI(UART_DEBUG, "%d", event.size);
-
+            		uart_read_bytes(UART_AT_PORT, hUart.uart_rxBuffer, event.size, portMAX_DELAY);
                     xSemaphoreGive(UART_RXsem);
                     hUart.uart_rxPacketSize = event.size;
-                    memcpy(hUart.uart_rxBuffer, dtmp, event.size);
+//                    memcpy(hUart.uart_rxBuffer, event, event.size);
                     hUart.uart_status.flags.rxPacket = 1;
 
-                    xQueueSendToBack(uartRx_queue, &hUart, portMAX_DELAY);
-
+                    ESP_LOGI(UART_DEBUG, "received packet: %s",hUart.uart_rxBuffer);
                     memset(&hUart, 0, sizeof(uartHandler_t));
                     break;
                 //Event of HW FIFO overflow detected
