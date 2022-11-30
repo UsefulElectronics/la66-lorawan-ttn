@@ -30,8 +30,9 @@
 #define AT_APPLICATION_KEY			"AT+APPKEY"
 #define AT_APPLICATION_SESSION_KEY	"AT+APPSKEY"
 
+#define AT_TERMINATOR				"\r\n"
 #define AT_JOINED_STATUS			"AT+NJS"
-#define AT_SEND_HEX_STRING			"AT+SEND0"
+#define AT_SEND_HEX_STRING			"AT+SENDB"
 #define AT_APPLICATION_PORT			"AT+PORT"
 /* ENUMORATIONS --------------------------------------------------------------*/
 

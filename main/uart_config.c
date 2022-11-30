@@ -17,6 +17,7 @@
 
 /* VARIABLES -----------------------------------------------------------------*/
 QueueHandle_t uartRx_queue;
+QueueHandle_t uartRxStore_queue;
 QueueHandle_t uartTx_queue;
 SemaphoreHandle_t UART_RXsem 	  		= NULL;
 /* DEFINITIONS ---------------------------------------------------------------*/
@@ -25,7 +26,7 @@ SemaphoreHandle_t UART_RXsem 	  		= NULL;
 
 /* PRIVATE FUNCTIONS DECLARATION ---------------------------------------------*/
 const char *UART_DEBUG = "UART";
-uartHandler_t	hUart;
+uartHandler_t hUart;
 /* FUNCTION PROTOTYPES -------------------------------------------------------*/
 /**
  * @brief initialize UART handler
@@ -87,11 +88,14 @@ void uart_config(void)
     uart_set_pin(UART_AT_PORT, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 
     //Set uart pattern detect function.
-    uart_enable_pattern_det_baud_intr(UART_AT_PORT, '\n', PATTERN_AT_COUNT, 2, 0, 0);
+//    uart_enable_pattern_det_baud_intr(UART_AT_PORT, '\n', PATTERN_AT_COUNT, 2, 0, 0);
     //Reset the pattern queue length to record at most 20 pattern positions.
-    uart_pattern_queue_reset(UART_AT_PORT, 100);
+//    uart_pattern_queue_reset(UART_AT_PORT, 100);
 
     uartBufferInit();
+
+    uartTx_queue 		= xQueueCreate(10, sizeof(uartHandler_t));
+    uartRxStore_queue  	= xQueueCreate(10, sizeof(uartHandler_t));
 }
 
 
@@ -120,13 +124,16 @@ void uart_event_task(void *pvParameters)
             case UART_DATA:
 //                	ESP_LOGI(UART_DEBUG, "%d", event.size);
             		uart_read_bytes(UART_AT_PORT, hUart.uart_rxBuffer, event.size, portMAX_DELAY);
-                    xSemaphoreGive(UART_RXsem);
+
                     hUart.uart_rxPacketSize = event.size;
-//                    memcpy(hUart.uart_rxBuffer, event, event.size);
+
                     hUart.uart_status.flags.rxPacket = 1;
 
-                    ESP_LOGI(UART_DEBUG, "received packet: %s",hUart.uart_rxBuffer);
-                    memset(&hUart, 0, sizeof(uartHandler_t));
+                    xQueueSendToBack(uartRxStore_queue, &hUart, portMAX_DELAY);
+
+//                    xSemaphoreGive(UART_RXsem);
+
+//                    memset(&hUart, 0, sizeof(uartHandler_t));
                     break;
                 //Event of HW FIFO overflow detected
                 case UART_FIFO_OVF:

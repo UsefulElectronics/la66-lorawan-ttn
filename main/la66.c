@@ -49,13 +49,35 @@ void la66_packetParser(char* packet, uint16_t packetSize)
 	{
 		uint8_t offset = packetSize - ( 2 + strlen(AT_NETWORK_JOINED));
 
-		ESP_LOGI(TAG, "%s", packet);
 		if(00 == memcmp(&packet[offset], AT_NETWORK_JOINED, strlen(AT_NETWORK_JOINED)))
 		{
 			hLa66.joinStatus = true;
 			ESP_LOGI(TAG, "LoRaWAN network has been joined.");
 		}
 	}
+}
+/**
+ * @brief AT+SENDB=01,01,8,08820802581ea0a5
+ *
+ * @param packet
+ * @param packetSize
+ */
+uint16_t la66_sendStringPacket(char* stringPacket, char* targetPacketBuffer)
+{
+	uint8_t fPort = 1;
+
+	uint16_t packetLength =  strlen(stringPacket);
+
+	sprintf(targetPacketBuffer, "%s1,%d,%d,%s,%s",
+			AT_SEND_HEX_STRING,
+			fPort,
+			packetLength,
+			stringPacket,
+			AT_TERMINATOR);
+
+	packetLength = strlen(targetPacketBuffer);
+
+	return packetLength;
 }
 /**
  * @brief

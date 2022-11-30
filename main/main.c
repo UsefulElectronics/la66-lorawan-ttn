@@ -37,11 +37,21 @@ const char *TAG = "Main";
 
 static void peripheral_handler_task(void *param)
 {
+	uartHandler_t la66Packet;
+//	uint8_t la66Packet[200] = {0};
+//	uint16_t packetSize	= 0;
 	while(1)
 	{
-		if(xSemaphoreTake(UART_RXsem, portMAX_DELAY) == pdTRUE)
+		if(xQueueReceive(uartRxStore_queue, (void *)&la66Packet, portMAX_DELAY))
+//		if(xSemaphoreTake(UART_RXsem, portMAX_DELAY) == pdTRUE)
 		{
-			la66_packetParser((char*)hUart.uart_rxBuffer, hUart.uart_rxPacketSize);
+//			memset(&la66Packet, 0, sizeof(uartHandler_t));
+
+//			packetSize = uartGetRxBuffer(la66Packet);
+			ESP_LOGI(TAG, "received packet: %s",(char*)la66Packet.uart_rxBuffer);
+
+			la66_packetParser((char*)la66Packet.uart_rxBuffer, la66Packet.uart_rxPacketSize);
+			memset(&la66Packet, 0, sizeof(uartHandler_t));
 		}
 	}
 }
