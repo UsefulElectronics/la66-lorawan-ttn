@@ -97,7 +97,25 @@ void uart_config(void)
     uartTx_queue 		= xQueueCreate(10, sizeof(uartHandler_t));
     uartRxStore_queue  	= xQueueCreate(10, sizeof(uartHandler_t));
 }
+/**
+ * @brief UART TX function. The transmission starts once the related queue is filled.
+ *
+ * @param pvParameters
+ */
+void uart_transmission_task(void *pvParameters)
+{
+	int dataTransmitted = 0;
+	while(1)
+	{
+		if(xQueueReceive(uartTx_queue, (void *)&hUart, portMAX_DELAY))
+		{
 
+			dataTransmitted = uart_write_bytes(UART_AT_PORT, hUart.uart_txBuffer, hUart.uart_txPacketSize);
+
+			vTaskDelay(50/portTICK_PERIOD_MS);
+		}
+	}
+}
 
 
 /**

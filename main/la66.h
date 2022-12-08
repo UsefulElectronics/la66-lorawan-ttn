@@ -32,8 +32,8 @@
 
 #define AT_TERMINATOR				"\r\n"
 #define AT_JOINED_STATUS			"AT+NJS"
-#define AT_SEND_HEX_STRING			"AT+SENDB"
-#define AT_APPLICATION_PORT			"AT+PORT"
+#define AT_SEND_HEX_STRING			"AT+SEND="
+#define AT_APPLICATION_PORT			"AT+PORT="
 /* ENUMORATIONS --------------------------------------------------------------*/
 
 /* STRUCTURES & TYPEDEFS -----------------------------------------------------*/
@@ -48,6 +48,7 @@ typedef struct
 bool la66_packetJoinStatus		(void);
 void la66_config				(void);
 void la66_packetParser			(char* packet, uint16_t packetSize);
+uint16_t la66_sendStringPacket	(char* stringPacket, char* targetPacketBuffer);
 
 #endif /* MAIN_LA66_H_ */
 

@@ -56,6 +56,7 @@ typedef struct
 /* VARIABLES -----------------------------------------------------------------*/
 extern QueueHandle_t 		uartRxStore_queue;
 extern SemaphoreHandle_t	UART_RXsem;
+extern QueueHandle_t 		uartTx_queue;
 extern uartHandler_t	 	hUart;
 /* FUNCTIONS DECLARATION -----------------------------------------------------*/
 void 	uartBufferInit			(void);
@@ -64,6 +65,7 @@ uint8_t uartCheckPacketRxFlag	(void);
 void 	uartResetPacketRxFlag	(void);
 void 	uart_config				(void);
 void 	uart_event_task			(void *pvParameters);
+void 	uart_transmission_task	(void *pvParameters);
 
 
 #endif /* MAIN_UART_CONFIG_H_ */

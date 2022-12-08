@@ -68,7 +68,7 @@ uint16_t la66_sendStringPacket(char* stringPacket, char* targetPacketBuffer)
 
 	uint16_t packetLength =  strlen(stringPacket);
 
-	sprintf(targetPacketBuffer, "%s1,%d,%d,%s,%s",
+	sprintf(targetPacketBuffer, "%s1,%d,%d,%s%s",
 			AT_SEND_HEX_STRING,
 			fPort,
 			packetLength,
@@ -76,6 +76,12 @@ uint16_t la66_sendStringPacket(char* stringPacket, char* targetPacketBuffer)
 			AT_TERMINATOR);
 
 	packetLength = strlen(targetPacketBuffer);
+
+	//TODO LA66 module problem in handling '.' character within a string
+	targetPacketBuffer[15] = ':';
+
+
+	ESP_LOGI(TAG, "%s",targetPacketBuffer);
 
 	return packetLength;
 }
