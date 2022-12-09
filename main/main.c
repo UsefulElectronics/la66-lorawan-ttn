@@ -64,8 +64,7 @@ static void la66_packetTx_task(void *param)
 
 	while(1)
 	{
-//		if(la66_packetJoinStatus())
-		if(1)
+		if(la66_packetJoinStatus())
 		{
 			sprintf(TempBuffer,"Temperature: %.02f",  tempSensor_read());
 
@@ -78,7 +77,7 @@ static void la66_packetTx_task(void *param)
 			memset(&hUart, 0, sizeof(uartHandler_t));
 		}
 
-		vTaskDelay(50000 / portTICK_PERIOD_MS);
+		vTaskDelay(60000 / portTICK_PERIOD_MS);
 	}
 }
 
@@ -111,10 +110,5 @@ void app_main(void)
 
     tempSensor_init();
 
-    while (1) {
-        vTaskDelay(1000 / portTICK_RATE_MS);
-
-        ESP_LOGI(TAG, "Temperature out celsius %.02f°C", tempSensor_read());
-    }
 }
 /**************************  Useful Electronics  ****************END OF FILE***/
