@@ -27,7 +27,8 @@ Some features of the TTN network are also presented and shown as a real life exa
 LPS8v2 gateway also features built in Node-Red server that allows IOT data management and offers UI. This feature is used to get the temperature  data from the TTN application MQTT broker to make it available to the connected IOT device.
 
 
-![Circuit Diagram](https://github.com/UsefulElectronics/esp32s3_la66_lorawan/blob/main/repo%20cover/video%20cover.png)
+![Circuit Diagram](https://github.com/UsefulElectronics/la66-lorawan-ttn/blob/main/repo%20cover/repo%20cover.png)
 
-
-
+## CONNECT Board Pin-out Diagram
+![Circuit Diagram](https://github.com/UsefulElectronics/la66-lorawan-ttn/blob/main/repo%20cover/ConnectPinout.png)
+s
