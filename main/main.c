@@ -70,6 +70,8 @@ static void la66_packetTx_task(void *param)
 
 			hUart.uart_txPacketSize = la66_sendStringPacket(TempBuffer,  (char*)hUart.uart_txBuffer);
 
+			ESP_LOGI(TAG, "%s",hUart.uart_txBuffer);
+
 			xQueueSendToBack(uartTx_queue, &hUart, portMAX_DELAY);
 
 			memset(TempBuffer, 0, sizeof(TempBuffer));
@@ -87,9 +89,11 @@ static void main_creatSysteTasks(void)
 
 	xTaskCreatePinnedToCore(peripheral_handler_task, "peripheral handler", 10000, NULL, 4, NULL, 1);
 
-	xTaskCreatePinnedToCore(la66_packetTx_task, "peripheral handler", 5000, NULL, 4, NULL, 1);
+	xTaskCreatePinnedToCore(la66_packetTx_task, "peripheral handler", 10000, NULL, 4, NULL, 1);
 
 	xTaskCreatePinnedToCore(uart_transmission_task, "USART TX handling task", 10000, NULL, 4, NULL, 1);
+
+
 
 }
 
@@ -106,9 +110,11 @@ void app_main(void)
 
     uart_config();
 
+    tempSensor_init();
+
     main_creatSysteTasks();
 
-    tempSensor_init();
+
 
 }
 /**************************  Useful Electronics  ****************END OF FILE***/
