@@ -66,7 +66,7 @@ static void la66_packetTx_task(void *param)
 	{
 		if(la66_packetJoinStatus())
 		{
-			sprintf(TempBuffer,"Temperature: %.02f",  tempSensor_read());
+			sprintf(TempBuffer,"%.02f",  tempSensor_read());
 
 			hUart.uart_txPacketSize = la66_sendStringPacket(TempBuffer,  (char*)hUart.uart_txBuffer);
 
@@ -79,7 +79,7 @@ static void la66_packetTx_task(void *param)
 			memset(&hUart, 0, sizeof(uartHandler_t));
 		}
 
-		vTaskDelay(60000 / portTICK_PERIOD_MS);
+		vTaskDelay(600000 / portTICK_PERIOD_MS);
 	}
 }
 

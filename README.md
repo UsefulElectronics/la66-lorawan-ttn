@@ -31,4 +31,3 @@ LPS8v2 gateway also features built in Node-Red server that allows IOT data manag
 
 ## CONNECT Board Pin-out Diagram
 ![Circuit Diagram](https://github.com/UsefulElectronics/la66-lorawan-ttn/blob/main/repo%20cover/ConnectPinout.png)
-s
