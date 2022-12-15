@@ -53,10 +53,20 @@ static void peripheral_handler_task(void *param)
 		}
 	}
 }
-
+/**
+ * @brief This task is used to form AT command that contains the packet to be sent to TTN
+ *
+ * @note :
+ *   Sending a stringing is not a good practice with LoRaWAN or any IOT, encode data in order not to wast battery life and air time. Air time is a commodity used by everyone
+ *   Please implement FUP (Fair usage policy) you are allowed 30 seconds uplink time a day and max 10 downlinks.
+ *
+ *
+ */
 static void la66_packetTx_task(void *param)
 {
-	static char TempBuffer[30] = {0};
+//	static char TempBuffer[30] = {0};
+
+	float TempBuffer = tempSensor_read();
 
 	uartHandler_t hUart;
 
@@ -66,15 +76,14 @@ static void la66_packetTx_task(void *param)
 	{
 		if(la66_packetJoinStatus())
 		{
-			sprintf(TempBuffer,"%.02f",  tempSensor_read());
+//			sprintf(TempBuffer,"%.02f",  tempSensor_read());
 
-			hUart.uart_txPacketSize = la66_sendStringPacket(TempBuffer,  (char*)hUart.uart_txBuffer);
+//			hUart.uart_txPacketSize = la66_sendStringPacket(TempBuffer,  (char*)hUart.uart_txBuffer);
 
-			ESP_LOGI(TAG, "%s",hUart.uart_txBuffer);
+			hUart.uart_txPacketSize = la66_sendDataPacket(&TempBuffer, (char*)hUart.uart_txBuffer, sizeof(float));
+
 
 			xQueueSendToBack(uartTx_queue, &hUart, portMAX_DELAY);
-
-			memset(TempBuffer, 0, sizeof(TempBuffer));
 
 			memset(&hUart, 0, sizeof(uartHandler_t));
 		}

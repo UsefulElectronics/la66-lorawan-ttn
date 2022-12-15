@@ -57,7 +57,7 @@ void la66_packetParser(char* packet, uint16_t packetSize)
 	}
 }
 /**
- * @brief AT+SENDB=01,01,8,08820802581ea0a5
+ * @brief AT+SEND=01,01,5,HELLO
  *
  * @param packet
  * @param packetSize
@@ -72,7 +72,7 @@ uint16_t la66_sendStringPacket(char* stringPacket, char* targetPacketBuffer)
 	stringPacket[15] = ':';
 
 	sprintf(targetPacketBuffer, "%s1,%d,%d,%s%s",
-			AT_SEND_HEX_STRING,
+			AT_SEND_ASCII_STRING,
 			fPort,
 			packetLength,
 			stringPacket,
@@ -81,8 +81,33 @@ uint16_t la66_sendStringPacket(char* stringPacket, char* targetPacketBuffer)
 	packetLength = strlen(targetPacketBuffer);
 
 
+	return packetLength;
+}
 
+/**
+ * @brief AT+SENDB=01,01,8,08820802581ea0a5
+ *
+ * @param packet
+ * @param packetSize
+ */
+uint16_t la66_sendDataPacket(void* dataPacket, char* targetPacketBuffer, uint8_t packetSize)
+{
+	uint8_t fPort = 1;
 
+	uint16_t packetLength =  packetSize;
+
+	sprintf(targetPacketBuffer, "%s1,%d,%d,",
+			AT_SEND_HEX_STRING,
+			fPort,
+			packetLength);
+
+	packetLength = strlen(targetPacketBuffer);
+
+	memcpy(&targetPacketBuffer[packetLength], dataPacket, packetSize);
+
+	packetLength += packetSize;
+
+	memcpy(&targetPacketBuffer[packetLength], ",\r\n", 3);
 
 
 	return packetLength;
